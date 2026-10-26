@@ -35,12 +35,12 @@ contract SwappAppTest is Test {
 
         IERC20(USDT).approve(address(swapApp), amountIn);
 
-        assertEq(IERC20(USDT).balanceOf(user), usdtBefore - amountIn);
-        assertGe(IERC20(DAI).balanceOf(user), daiBefore + amountOutMin);
-
         vm.expectEmit(false, false, false, false);
         emit SwapApp.SwapTokens(USDT, DAI, amountIn, 0);
         swapApp.swapTokens(amountIn, amountOutMin, path, deadline);
+
+        assertEq(IERC20(USDT).balanceOf(user), usdtBefore - amountIn);
+        assertGe(IERC20(DAI).balanceOf(user), daiBefore + amountOutMin);
 
         vm.stopPrank();
     }
