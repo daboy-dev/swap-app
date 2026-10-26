@@ -44,4 +44,22 @@ contract SwappAppTest is Test {
 
         vm.stopPrank();
     }
+
+    function test_RevertWhen_DeadlineExpired() public {
+        vm.startPrank(user);
+
+        uint256 amountIn = 2 * 1e6;
+        uint256 amountOutMin = 1 * 1e18;
+        uint256 deadline = block.timestamp - 1 minutes;
+        address[] memory path = new address[](2);
+        path[0] = USDT;
+        path[1] = DAI;
+
+        IERC20(USDT).approve(address(swapApp), amountIn);
+
+        vm.expectRevert("UniswapV2Router: EXPIRED");
+        swapApp.swapTokens(amountIn, amountOutMin, path, deadline);
+
+        vm.stopPrank();
+    }
 }
